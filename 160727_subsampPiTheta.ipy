@@ -1,0 +1,19 @@
+#!/usr/bin/ipython
+
+#Popoolation
+
+Prefix = raw_input('prefix: ') 
+Coverage = raw_input('target coverage: ')
+
+def SubSample():
+    !perl /opt/PepPrograms/popoolation_1.2.2/basic-pipeline/subsample-pileup.pl --input {Prefix}.noIndel.mpileup --output {Prefix}_rand50.mpileup --target-coverage {Coverage} --max-cov 1000000 --min-qual 20 --fastq-type sanger --method withoutreplace
+
+def pi():
+    !perl /opt/PepPrograms/popoolation_1.2.2/Variance-sliding.pl --measure pi --pool-size 10000 --fastq-type sanger --min-count 2 --min-covered-fraction 0.5 --window-size 100000 --step-size 10000 --input {Prefix}_rand50.mpileup --output {Prefix}_rand50_w100K_n10K.pi --snp-output {Prefix}_rand50.snps
+
+def theta():
+    !perl /opt/PepPrograms/popoolation_1.2.2/Variance-sliding.pl --measure theta --pool-size 10000 --fastq-type sanger --min-count 2 --min-covered-fraction 0.5 --window-size 100000 --step-size 10000 --input {Prefix}_rand50.mpileup --output {Prefix}_rand50_w100K_n10K.theta
+
+SubSample()
+pi()
+theta()
