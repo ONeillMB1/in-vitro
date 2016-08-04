@@ -2,14 +2,14 @@ universe = vanilla
 executable = automatePoolSeqDiversityStats.py
 arguments = "--prefix --threads"
 
-output = Stats_$(RUN).sync
-error = Stats_$(RUN).err
-log = Stats_$(RUN).log
+output = Stats_$(0).sync
+error = Stats_$(0).err
+log = Stats_$(0).log
 
 transfer_executable = TRUE
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
-transfer_input_files = $(RUN).noIndel.mpileup
+transfer_input_files = $(0).noIndel.mpileup
 
 request_cpus = 1
 request_memory = 1GB
