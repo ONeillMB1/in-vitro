@@ -5,8 +5,9 @@ import sys
 import os
 import getopt
 import glob
-from subprocess import call
+import subprocess
 import shlex
+from datetime import datetime
 
 ####################################################################
 ##This script is generic. Modify!
@@ -54,20 +55,44 @@ def get_arguments():
 
 args = get_arguments()
 
+current_datetime = datetime.today().strftime("%d-%m-%Y-%H%M")
+
+#calls a system command with the subprocess module
+#redirects both stdout and stderr to a log file
+def call_with_log(cmd):
+    cmd = cmd.format(**(kvmap))
+
+    logfile = open(current_datetime+".log", "a+")
+    logfile.write("Executing command: " + cmd + "\n")
+    logfile.flush()
+    ret = subprocess.call(shlex.split(cmd), stdout=logfile, stderr=logfile)
+    if(ret != 0):
+        print("Script did not complete successfully. \n Command : \n\n" + cmd + "\n\n returned with non-zero code: " + str(ret))
+        logfile.write("Script did not complete successfully. \n Command : \n\n" + cmd + "\n\n returned with non-zero code: " + str(ret))
+        logfile.close()
+        sys.exit(-1)
+    logfile.close()
+
 def remReg():
-    call("perl /opt/PepPrograms/popoolation_1.2.2/basic-pipeline/filter-pileup-by-gtf.pl --input {0}.noIndel.mpileup --gtf {1} --output {0}.filtered.mpileup".format(args.prefix, args.removereg), shell=True)
+    call_with_log("perl /opt/PepPrograms/popoolation_1.2.2/basic-pipeline/filter-pileup-by-gtf.pl --input {0}.noIndel.mpileup --gtf {1} --output {0}.filtered.mpileup".format(args.prefix, args.removereg))
+    print("executing removal of rep regions")
 
-def SubSample():
-    call("perl /opt/PepPrograms/popoolation_1.2.2/basic-pipeline/subsample-pileup.pl --input {0}.filtered.mpileup --output {0}_rand{1}.mpileup --target-coverage {2} --max-cov 1000000 --min-qual 20 --fastq-type sanger --method withoutreplace".format(args.prefix, i, args.coverage), shell=True)
+def SubSample(i):
+    call_with_log("perl /opt/PepPrograms/popoolation_1.2.2/basic-pipeline/subsample-pileup.pl --input {0}.filtered.mpileup --output {0}_rand{1}.mpileup --target-coverage {2} --max-cov 1000000 --min-qual 20 --fastq-type sanger --method withoutreplace".format(args.prefix, i, args.coverage))
+    print("executing random subsampling {0}".format(i))
 
-def pi():
-    call("perl /opt/PepPrograms/popoolation_1.2.2/Variance-sliding.pl --measure pi --pool-size 10000 --fastq-type sanger --min-count 2 --min-covered-fraction 0.5 --window-size 100000 --step-size 10000 --input {0}_rand{i}.mpileup --output {0}_rand{1}_w100K_n10K.pi --snp-output {0}_rand{1}.snps".format(args.prefix, i), shell=True)
+def pi(i):
+    call_with_log("perl /opt/PepPrograms/popoolation_1.2.2/Variance-sliding.pl --measure pi --pool-size 10000 --fastq-type sanger --min-count 2 --min-covered-fraction 0.5 --window-size 100000 --step-size 10000 --input {0}_rand{i}.mpileup --output {0}_rand{1}_w100K_n10K.pi --snp-output {0}_rand{1}.snps".format(args.prefix, i))
+    print("executing pi calculation on subsample {0}".format(i))
 
-def theta():
-    call("perl /opt/PepPrograms/popoolation_1.2.2/Variance-sliding.pl --measure theta --pool-size 10000 --fastq-type sanger --min-count 2 --min-covered-fraction 0.5 --window-size 100000 --step-size 10000 --input {0}_rand{1}.mpileup --output {0}_rand{1}_w100K_n10K.theta".format(args.prefix, i), shell=True)
+def theta(i):
+    call_with_log("perl /opt/PepPrograms/popoolation_1.2.2/Variance-sliding.pl --measure theta --pool-size 10000 --fastq-type sanger --min-count 2 --min-covered-fraction 0.5 --window-size 100000 --step-size 10000 --input {0}_rand{1}.mpileup --output {0}_rand{1}_w100K_n10K.theta".format(args.prefix, i))
+    print("executing theta calculation on subsample {0}".format(i))
+
+kvmap= {'prefix':args.prefix}
 
 remReg()
 for i in range(10) :
-    SubSample()
-    pi()
-    theta()
+    SubSample(i)
+    pi(i)
+    theta(i)
