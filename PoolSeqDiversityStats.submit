@@ -1,6 +1,6 @@
 universe = vanilla
 executable = automatePoolSeqDiversityStats.py
-arguments = "--prefix --threads"
+arguments = "-p -c -v"
 
 output = Stats_$(0).sync
 error = Stats_$(0).err
