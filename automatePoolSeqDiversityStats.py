@@ -82,7 +82,7 @@ def SubSample(i):
     print("executing random subsampling {0}".format(i))
 
 def pi(i):
-    call_with_log("perl /opt/PepPrograms/popoolation_1.2.2/Variance-sliding.pl --measure pi --pool-size 10000 --fastq-type sanger --min-count 2 --min-covered-fraction 0.5 --window-size 100000 --step-size 10000 --input {0}_rand{i}.mpileup --output {0}_rand{1}_w100K_n10K.pi --snp-output {0}_rand{1}.snps".format(args.prefix, i))
+    call_with_log("perl /opt/PepPrograms/popoolation_1.2.2/Variance-sliding.pl --measure pi --pool-size 10000 --fastq-type sanger --min-count 2 --min-covered-fraction 0.5 --window-size 100000 --step-size 10000 --input {0}_rand{1}.mpileup --output {0}_rand{1}_w100K_n10K.pi --snp-output {0}_rand{1}.snps".format(args.prefix, i))
     print("executing pi calculation on subsample {0}".format(i))
 
 def theta(i):
