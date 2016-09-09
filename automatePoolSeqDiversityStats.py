@@ -89,10 +89,22 @@ def theta(i):
     call_with_log("perl /opt/PepPrograms/popoolation_1.2.2/Variance-sliding.pl --measure theta --pool-size 10000 --fastq-type sanger --min-count 2 --min-covered-fraction 0.5 --window-size 100000 --step-size 10000 --input {0}_rand{1}.mpileup --output {0}_rand{1}_w100K_n10K.theta".format(args.prefix, i))
     print("executing theta calculation on subsample {0}".format(i))
 
+def td(i):
+    call_with_log("perl /opt/PepPrograms/popoolation_1.2.2/Variance-sliding.pl --measure D --pool-size 10000 --fastq-type sanger --min-count 2 --min-covered-fraction 0.5 --window-size 100000 --step-size 10000 --input {0}_rand{1}.mpileup --output {0}_rand{1}_w100K_n10K.td ".format(args.prefix, i))
+    print("executing td calculation on subsample {0}".format(i))
+
+def gene_pi(i):
+    call_with_log("perl /opt/PepPrograms/popoolation_1.2.2/Variance-at-position.pl --measure pi --pool-size 10000 --fastq-type sanger --min-count 2 --min-covered-fraction 0.5 --pileup {0}_rand{1}.mpileup --output {0}_rand{1}_gene.pi --snp-output {0}_rand{1}.gene.snps".format(args.prefix, i))
+    print("executing pi calculation on subsample {0}".format(i))
+
+
+
+
 kvmap= {'prefix':args.prefix}
 
 remReg()
 for i in range(10) :
-    SubSample(i)
-    pi(i)
-    theta(i)
+    #SubSample(i)
+    #pi(i)
+    #theta(i)
+    td(i)
