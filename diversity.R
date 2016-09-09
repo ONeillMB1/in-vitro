@@ -43,8 +43,6 @@ all.theta.uncleaned <- rbind(data.frame(samp="pmtb26", window=pmtb26$V2, theta=p
                              data.frame(samp="pmtb29", window=pmtb29$V2, theta=pmtb29$V5))
 
 
-
-
 ## Plots
 
 piP <- ggplot(all.pi.cleaned) + 
@@ -87,3 +85,49 @@ thP <- ggplot(all.theta.uncleaned) +
         plot.margin = unit(c(0.15, 0.5, 0.05, 0.5), "lines")
   )
 thP
+
+
+##############################
+
+pi <- read.table("C:/Users/Mary/PepLab/data/Mtb_invitro/ERR867520_allRand_w100K_n10K.pi", header=F, sep='\t', na.strings="na")
+th <- read.table("C:/Users/Mary/PepLab/data/Mtb_invitro/ERR867520_allRand_w100K_n10K.theta", header=F, sep='\t', na.strings="na") 
+
+p <- ggplot(pi) + 
+  geom_line(aes(x=V3, y=V6, colour=V1)) + 
+  #facet_wrap(~samp, nrow = 1) +
+  ylab(expression(pi)) + 
+  theme(plot.background=element_blank(),
+        panel.background=element_blank(),
+        panel.border=element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position="right",
+        legend.title=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_text(vjust = 1, size = rel(2)),
+        axis.line=element_line(),
+        plot.margin = unit(c(0.15, 0.5, 0.05, 0.5), "lines")
+  )
+p
+
+t <- ggplot(th) + 
+  geom_line(aes(x=V3, y=V6, colour=V1)) + 
+  #facet_wrap(~samp, nrow = 1) +
+  ylab(expression(theta)) + 
+  theme(plot.background=element_blank(),
+        panel.background=element_blank(),
+        panel.border=element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position="right",
+        legend.title=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_text(vjust = 1, size = rel(2)),
+        axis.line=element_line(),
+        plot.margin = unit(c(0.15, 0.5, 0.05, 0.5), "lines")
+  )
+t
