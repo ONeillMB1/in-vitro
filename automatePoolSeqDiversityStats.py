@@ -51,6 +51,10 @@ def get_arguments():
         help = 'gtf file containing regions to be removed',
         type = is_file,
         required=True)
+    parser.add_argument('-g', '--gtf', 
+        help = 'gtf file containing genes',
+        type = is_file,
+        required=True)
     return parser.parse_args()
 
 args = get_arguments()
@@ -94,11 +98,16 @@ def td(i):
     print("executing td calculation on subsample {0}".format(i))
 
 def gene_pi(i):
-    call_with_log("perl /opt/PepPrograms/popoolation_1.2.2/Variance-at-position.pl --measure pi --pool-size 10000 --fastq-type sanger --min-count 2 --min-covered-fraction 0.5 --pileup {0}_rand{1}.mpileup --output {0}_rand{1}_gene.pi --snp-output {0}_rand{1}.gene.snps".format(args.prefix, i))
-    print("executing pi calculation on subsample {0}".format(i))
+    call_with_log("perl /opt/PepPrograms/popoolation_1.2.2/Variance-at-position.pl --measure pi --pool-size 10000 --fastq-type sanger --min-count 2 --min-covered-fraction 0.5 --pileup {0}_rand{1}.mpileup --output {0}_rand{1}_gene.pi --snp-output {0}_rand{1}.gene.snps --gtf {2}".format(args.prefix, i, args.gtf))
+    print("executing pi gene-wise calculation on subsample {0}".format(i))
 
+def gene_theta(i):
+    call_with_log("perl /opt/PepPrograms/popoolation_1.2.2/Variance-at-position.pl --measure theta --pool-size 10000 --fastq-type sanger --min-count 2 --min-covered-fraction 0.5 --pileup {0}_rand{1}.mpileup --output {0}_rand{1}_gene.theta --gtf {2}".format(args.prefix, i, args.gtf))
+    print("executing theta gene-wise calculation on subsample {0}".format(i))
 
-
+def syn_nonsyn(i):
+    call_with_log("perl /opt/PepPrograms/popoolation_1.2.2/Variance-at-position.pl --measure pi --pool-size 10000 --fastq-type sanger --min-count 2 --min-covered-fraction 0.5 --codon-table /opt/PepPrograms/popoolation_1.2.2/syn-nonsyn/codon-table.txt --nonsyn-length-table /opt/PepPrograms/popoolation_1.2.2/syn-nonsyn/nsl_p1.txt --pileup {0}_rand{1}.mpileup --output {0}_rand{1}_syn-nonsyn.pi --snp-output {0}_rand{1}_syn-nonsyn.snps --gtf {2}".format(args.prefix, i, args.gtf))
+    print("executing pi syn-nonsyn calculation on subsample {0}".format(i))
 
 kvmap= {'prefix':args.prefix}
 
@@ -108,3 +117,6 @@ for i in range(10) :
     #pi(i)
     #theta(i)
     td(i)
+    gene_pi(i)
+    gene_theta(i)
+    syn_nonsyn(i)
