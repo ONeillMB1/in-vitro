@@ -1,0 +1,18 @@
+JOB samtools BAMtoFASTQ_meta.submit
+VARS samtools RUN="${sample}"
+
+JOB kraken kraken_meta.submit
+VARS kraken RUN="${sample}"
+
+JOB picard picard_meta.submit
+VARS picard RUN="${sample}"
+
+JOB mpileup mpileup_meta.submit
+VARS mpileup RUN="${sample}"
+
+JOB remIndels remIndels_meta.submit
+VARS remIndels RUN="${sample}"
+
+parent samtools child picard
+parent picard child mpileup
+parent mpileup child remIndels

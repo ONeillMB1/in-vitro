@@ -1,0 +1,17 @@
+universe = vanilla
+executable = picard.sh
+arguments = "${sample}"
+
+output = picard_${sample}.out
+error = picard_${sample}.err
+log = picard_${sample}.log
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = ${sample}.realn.bam,${sample}_Mycobacterium_seqNames.txt
+
+request_cpus = 1
+request_memory = 2GB
+request_disk = 2GB
+
+queue

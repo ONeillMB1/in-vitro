@@ -1,0 +1,17 @@
+universe = vanilla
+executable = kraken.sh
+arguments = "${sample}"
+
+output = kraken_${sample}.out
+error = kraken_${sample}.err
+log = kraken_${sample}.log
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = ${sample}.realn.fastq
+
+request_cpus = 1
+request_memory = 2GB
+request_disk = 2GB
+
+queue

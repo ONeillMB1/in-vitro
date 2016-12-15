@@ -1,0 +1,17 @@
+universe = vanilla
+executable = BAMtoFASTQ.sh
+arguments = "${sample}"
+
+output = BAMtoFASTQ_${sample}.out
+error = BAMtoFASTQ_${sample}.err
+log = BAMtoFASTQ_${sample}.log
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = ${sample}.realn.bam
+
+request_cpus = 1
+request_memory = 2GB
+request_disk = 2GB
+
+queue
